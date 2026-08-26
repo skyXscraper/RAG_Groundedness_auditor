@@ -1,0 +1,9 @@
+.env
+__pycache__/
+*.pyc
+outputs/faiss_index/
+outputs/eval_report.json
+data/raw_filings/
+.ipynb_checkpoints/
+venv/
+.DS_Store
