@@ -28,8 +28,15 @@ def get_embedding_model():
     return _model
 
 
+# model= get_embedding_model()
+# sample= "Apple's revenue grew 8% year over year, driven by strong iPhone sales."
+# vector=model.encode(sample)
+# print(type(vector)) # numpy.array
+# print(vector.shape) #(384,)
+# print(vector[:10]) 
+
 def build_index(chunks: list[Chunk]):
-    """Embeds all chunks and builds a FAISS index (cosine similarity via inner product)."""
+    
     model = get_embedding_model()
     texts = [c.text for c in chunks]
     embeddings = model.encode(texts, normalize_embeddings=True, show_progress_bar=True)
@@ -64,4 +71,4 @@ if __name__ == "__main__":
     index, chunks = build_index(chunks)
     save_index(index, chunks)
     print(f"Indexed {len(chunks)} chunks -> saved to {config.FAISS_INDEX_DIR}")
-    0
+    
