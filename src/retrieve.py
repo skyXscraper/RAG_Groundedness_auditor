@@ -1,9 +1,3 @@
-"""
-Module 3: Retrieval
-
-Given a natural-language query, returns the top-k most semantically
-similar chunks from the FAISS index, each with a similarity score.
-"""
 
 import os
 import sys
@@ -16,8 +10,7 @@ from src.embed_store import get_embedding_model, load_index
 
 
 def retrieve(query: str, index, chunks, k: int = None):
-    """Returns a list of (Chunk, score) tuples, sorted by relevance."""
-    k = k or config.TOP_K
+    k=k or config.TOP_K
     model = get_embedding_model()
 
     q_embedding = model.encode([query], normalize_embeddings=True)
@@ -26,7 +19,7 @@ def retrieve(query: str, index, chunks, k: int = None):
     results = []
     for score, idx in zip(scores[0], idxs[0]):
         if idx == -1:
-            continue  # FAISS returns -1 if fewer than k results exist
+            continue  
         results.append((chunks[idx], float(score)))
 
     return results

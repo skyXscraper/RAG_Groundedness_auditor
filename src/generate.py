@@ -1,11 +1,3 @@
-"""
-Module 4: Grounded Generation
-
-Builds a prompt that forces the LLM to cite which retrieved chunk
-supports each claim, then calls the generator (Ollama locally, or
-NVIDIA NIM's API) to produce the answer.
-"""
-
 import os
 import re
 import sys
@@ -13,9 +5,9 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import config
 
-
+#this is to make a separate prompt for each chunck, based on the source
 def build_prompt(query: str, retrieved_chunks: list) -> str:
-    """retrieved_chunks: list of (Chunk, score) tuples from Module 3."""
+    
     context = "\n\n".join(
         f"[{i}] (source: {chunk.source_id}, section: {chunk.section})\n{chunk.text}"
         for i, (chunk, _) in enumerate(retrieved_chunks)
@@ -56,7 +48,7 @@ def _generate_with_nim(prompt: str) -> str:
 
 
 def generate_answer(prompt: str) -> str:
-    """Routes to whichever backend is set in config.py."""
+    
     if config.GENERATION_BACKEND == "ollama":
         return _generate_with_ollama(prompt)
     elif config.GENERATION_BACKEND == "nim":
@@ -66,13 +58,7 @@ def generate_answer(prompt: str) -> str:
 
 
 def extract_citations(answer: str, num_sources: int) -> dict:
-    """
-    Splits the answer into sentences and maps each sentence to the
-    source index it cites, e.g. {0: 2, 1: 0} means sentence 0 cites source [2].
-    Sentences with no citation or multiple citations are handled simply:
-    - no citation -> skipped (nothing to verify against)
-    - multiple citations -> first one used
-    """
+    
     sentences = re.split(r'(?<=[.!?])\s+', answer.strip())
     citation_map = {}
 
